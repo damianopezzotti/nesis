@@ -21,6 +21,8 @@ spec:
                 items:
                   type: string
                 type: array
+              selectorMatchLabel:
+                type: string
               rules:
                 items:
                   properties:
