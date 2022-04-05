@@ -23,6 +23,10 @@ spec:
                 type: array
               selectorMatchLabel:
                 type: string
+              headerName:
+                type: string
+              forwardJWT:
+                type: boolean
               rules:
                 items:
                   properties:
