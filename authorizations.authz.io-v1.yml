@@ -17,13 +17,13 @@ spec:
         properties:
           spec:
             properties:
+              scope:
+                type: string
               allowedNamespaces:
                 items:
                   type: string
                 type: array
               selectorMatchLabel:
-                type: string
-              headerName:
                 type: string
               forwardJWT:
                 type: boolean
@@ -51,6 +51,8 @@ spec:
                             type: array
                         type: object
                       type: array
+                    scope:
+                      type: string
                     permissions:
                       items:
                         type: string
