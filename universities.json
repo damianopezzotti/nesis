@@ -1,0 +1,213 @@
+{
+  "name": "universities",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -20
+      ],
+      "id": "3f4ca26d-0bf9-4d5b-a630-07abbf0c60ed",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://dati-ustat.mur.gov.it/datastore/dump/820aefe6-0662-4656-84ec-d8859a2a3b7e?format=json",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -180,
+        -20
+      ],
+      "id": "dd1859dd-86c0-4b76-8706-6d6b863ca542",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "records",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        60,
+        -20
+      ],
+      "id": "18b7570a-ed94-4c54-9dd8-3e905e499fc2",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bd806811-0eff-4016-9702-2a8bceced83e",
+              "name": "_id",
+              "value": "={{ $json['0'] }}",
+              "type": "string"
+            },
+            {
+              "id": "880943e5-6d31-43c8-b39a-58a2985f0d7a",
+              "name": "code",
+              "value": "={{ $json['1'].toString() }}",
+              "type": "string"
+            },
+            {
+              "id": "1bbb02e5-cf97-4b88-9aa1-22efaaf1d6f8",
+              "name": "description",
+              "value": "={{ $json['2'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8180a4a7-5072-4e15-8416-3184948886e2",
+              "name": "status",
+              "value": "={{ $json['4'] }}",
+              "type": "string"
+            },
+            {
+              "id": "19e7237d-a9bf-47eb-ad08-25a0b941e8a9",
+              "name": "type",
+              "value": "={{ $json['5'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c3a26ef4-e2f1-4930-b1c2-1c20edac3074",
+              "name": "isStateUniversity",
+              "value": "={{ $json['6'] == 'S' }}",
+              "type": "boolean"
+            },
+            {
+              "id": "abbfe44d-c227-47fb-8a75-32033f580886",
+              "name": "isPrivateUniversity",
+              "value": "={{ $json['6'] == 'L' }}",
+              "type": "boolean"
+            },
+            {
+              "id": "a3723362-3c42-4f24-bc62-0992a6e6bd46",
+              "name": "region",
+              "value": "={{ $json['10'] }}",
+              "type": "string"
+            },
+            {
+              "id": "7396164a-5a82-4694-a06f-d5bc13909b01",
+              "name": "province",
+              "value": "={{ $json['9'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f26544c8-d39d-4598-b29b-f2ce2e0fd7f5",
+              "name": "city",
+              "value": "={{ $json['8'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c8fe39ea-bd50-4fa3-bfda-997d153647c6",
+              "name": "address",
+              "value": "={{ $json['7'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        280,
+        -20
+      ],
+      "id": "e5ad20a8-051f-46e3-aafd-a9ee756afc55",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "commons-universities",
+        "fields": "_id,code,description,status,type,isStateUniversity,isPrivateUniversity,region,province,city,address",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        -20
+      ],
+      "id": "db5b1885-c2c9-4865-b207-7abc9ae3afcd",
+      "name": "MongoDB",
+      "credentials": {
+        "mongoDb": {
+          "id": "6bTUCZFKWlgO9EsN",
+          "name": "MongoDB account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1b5bd62f-b9fe-454c-89ea-3c152e53fb7f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "542fb667dde32d3e378c0b6dd17a8ed8dd518d6b8f92e72efb7508bacfcab83c"
+  },
+  "id": "jdORaE41XQ7wSzcr",
+  "tags": []
+}
